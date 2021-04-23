@@ -6,7 +6,7 @@ make all -f /home/nick/p/c/Makefile --print-data-base --no-builtin-variables --n
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Apr 23 17:13:32 2021
+# Make data base, printed on Fri Apr 23 18:57:07 2021
 
 # Variables
 
@@ -15,7 +15,7 @@ NO_AT_BRIDGE = 1
 # environment
 I3SOCK = /run/user/1000/i3/ipc-socket.630
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-60c9340b-df8b-445b-8cee-7fa0451cf405.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ab274e01-e3db-4877-8cf4-16d6958544b8.sock
 # makefile (from '/home/nick/p/c/Makefile', line 6)
 LIBS = -lX11 -lcairo -lXrandr
 # default
@@ -77,7 +77,7 @@ MAKEFILE_LIST := /home/nick/p/c/Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 157102
+VSCODE_PID = 1691383
 # environment
 XDG_SESSION_TYPE = x11
 # environment
@@ -199,7 +199,7 @@ SOURCES = main.c
 # environment
 GDMSESSION = i3
 # variable set hash-table stats:
-# Load=94/1024=9%, Rehash=0, Collisions=6/138=4%
+# Load=94/1024=9%, Rehash=0, Collisions=6/129=5%
 
 # Pattern-specific Variable Values
 
@@ -225,28 +225,9 @@ clean:
 
 mandelbg: main.o
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: ''
-#  File does not exist.
+#  Last modified 2021-04-23 18:56:10.500227313
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := mandelbg
-# automatic
-# * := 
-# automatic
-# < := main.o
-# automatic
-# + := main.o
-# automatic
-# % := 
-# automatic
-# ^ := main.o
-# automatic
-# ? := main.o
-# automatic
-# | := 
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=6/17=35%
+#  Successfully updated.
 #  recipe to execute (from '/home/nick/p/c/Makefile', line 15):
 	$(CC) $(LFLAGS) $(COBJECTS) -o $(TARGET) $(LIBS)
 
@@ -261,9 +242,7 @@ all: main.c mandelbg
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/9=0%
+#  Successfully updated.
 
 purge: clean
 #  Implicit rule search has not been done.
@@ -275,14 +254,13 @@ purge: clean
 # Not a target:
 main.c:
 #  Implicit rule search has been done.
-#  Last modified 2021-04-23 17:11:51.780348786
+#  Last modified 2021-04-23 18:56:07.13992624
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 /home/nick/p/c/Makefile:
 #  Implicit rule search has been done.
- 
 #  Last modified 2021-04-23 17:13:20.848298697
 #  File has been updated.
 #  Successfully updated.
@@ -290,18 +268,12 @@ main.c:
 # Not a target:
 main.o:
 #  Implicit rule search has been done.
-#  Last modified 2021-04-23 17:12:01.601225351
+#  Last modified 2021-04-23 18:56:10.450222832
 #  File has been updated.
 #  Successfully updated.
 
-# Not a target:
-.SUFFIXES:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
 # files hash-table stats:
-# Load=9/1024=1%, Rehash=0, Collisions=0/27=0%
+# Load=9/1024=1%, Rehash=0, Collisions=0/26=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
@@ -311,9 +283,10 @@ main.o:
 # strcache buffers: 1 (0) / strings = 11 / storage = 114 B / avg = 10 B
 # current buf: size = 8162 B / used = 114 B / count = 11 / avg = 10 B
 
-# strcache performance: lookups = 22 / hit rate = 50%
+# strcache performance: lookups = 21 / hit rate = 47%
 # hash-table stats:
-# Load=11/8192=0%, Rehash=0, Collisions=0/22=0%
-# Finished Make data base on Fri Apr 23 17:13:32 2021
+ 
+# Load=11/8192=0%, Rehash=0, Collisions=0/21=0%
+# Finished Make data base on Fri Apr 23 18:57:07 2021
 
  

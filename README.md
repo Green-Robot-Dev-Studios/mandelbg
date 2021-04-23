@@ -1,0 +1,1 @@
+# Project that allows you to have an interactive mandelbrot figure as your root window

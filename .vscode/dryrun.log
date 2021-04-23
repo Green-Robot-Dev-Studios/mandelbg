@@ -1,5 +1,6 @@
-make all -f /home/nick/p/c/Makefile --dry-run --keep-going --print-directory
+make all -f /home/nick/p/c/Makefile --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/nick/p/c'
+gcc  -O3   -c -o main.o main.c
 gcc  -lm main.o -o mandelbg  -lX11 -lcairo -lXrandr
 make: Leaving directory '/home/nick/p/c'
  
