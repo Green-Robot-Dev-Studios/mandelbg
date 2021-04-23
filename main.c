@@ -44,18 +44,20 @@ void pixel(cairo_t *cairo, int x, int y, Color color) {
 
 void mandelbrot(cairo_t *cairo, int x, int y, int w, int h) {
     // (((P-x)/w) * 3.5) - 2.5
-    printf("Drawing mandelbrot for %d, %d size %d, %d\n",
-    x, y, w, h);
+    // printf("Drawing mandelbrot for %d, %d size %d, %d\n",
+    // x, y, w, h);
     for (int i = x; i < x + w; i++) {
         for (int j = y; j < y + h; j++) {
             float x0 = (((i - x) / (float)w) * 3.5) - 2.5;
             float y0 = (((j - y) / (float)h) * 2.0) - 1.0;
+            float x1 = 0, y1 = 0;
             float px = 0, py = 0;
             int maxIter = 1000, iter = 0;
-            while (px*px + py*py <= 2*2 && iter < maxIter) {
-                float xTemp = px * px - py * py + x0;
-                py = 2.0*px*py + y0;
-                px = xTemp;
+            while (x1 + y1 <= 4 && iter < maxIter) {
+                py = 2 * px * py + y0;
+                px = x1 - y1 + x0;
+                x1 = px * px;
+                y1 = py * py;
                 iter++;
             }
             Color color;
