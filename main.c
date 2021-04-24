@@ -10,7 +10,7 @@
 int width, height;
 
 void pixel(cairo_t *cairo, int x, int y, Color color) {
-    cairo_set_source_rgb(cairo, color.r/255, color.g/255, color.b/255);
+    cairo_set_source_rgb(cairo, color.r/255.0, color.g/255.0, color.b/255.0);
     cairo_rectangle(cairo, x, y, 1, 1);
     cairo_fill(cairo);
 }
@@ -52,19 +52,21 @@ void mandelbrot(cairo_t *cairo, int x, int y, int w, int h) {
             float y0 = (((j - y) / (float)h) * 2.0) - 1.0;
             float x1 = 0, y1 = 0;
             float px = 0, py = 0;
-            int maxIter = 1000, iter = 0;
+            int maxIter = 20, iter = 0;
             while (x1 + y1 <= 4 && iter < maxIter) {
-                py = 2 * px * py + y0;
+                py = 2.0 * px * py + y0;
                 px = x1 - y1 + x0;
                 x1 = px * px;
                 y1 = py * py;
                 iter++;
             }
+            //printf("first %f, iter %d\n", x1+y1, iter);
             Color color;
-            color.r = iter / maxIter * 255;
-            color.g = iter / maxIter * 150;
-            color.b = iter / maxIter * 80;
-            //printf("%d\n", iter);
+            color.r = (iter * 255) / maxIter;
+            color.g = 0;
+            color.b = 0;
+            if (iter == maxIter) color.r = 0;
+            //printf("%d\n", color.r);
             pixel(cairo, i, j, color);
         }
     }
