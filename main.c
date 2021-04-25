@@ -1,102 +1,43 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xrandr.h>
-#include <cairo/cairo.h>
-#include <cairo/cairo-xlib.h>
 #include "util.h"
+#include "fractals.h"
 
-int width, height;
+int width, height, needsRedraw = 1;
 
-void pixel(cairo_t *cairo, int x, int y, Color color) {
-    cairo_set_source_rgb(cairo, color.r/255.0, color.g/255.0, color.b/255.0);
-    cairo_rectangle(cairo, x, y, 1, 1);
-    cairo_fill(cairo);
+void draw(XImage *surfaceImage, int x, int y, int w, int h, int c)
+{
+    mandelbrot(surfaceImage, x, y, w, h, c);
 }
 
-// for each pixel (Px, Py) on the screen do
-//     x0 := scaled x coordinate of pixel (scaled to lie in the Mandelbrot X scale (-2.5, 1))
-//     y0 := scaled y coordinate of pixel (scaled to lie in the Mandelbrot Y scale (-1, 1))
-//     x := 0.0
-//     y := 0.0
-//     iteration := 0
-//     max_iteration := 1000
-//     while (x*x + y*y ≤ 2*2 AND iteration < max_iteration) do
-//         xtemp := x*x - y*y + x0
-//         y := 2*x*y + y0
-//         x := xtemp
-//         iteration := iteration + 1
-
-//     color := palette[iteration]
-//     plot(Px, Py, color)
-
-// better optimised pseudo (wikepedia thank you)
-// x2 := 0
-// y2 := 0
-
-// while (x2 + y2 ≤ 4 and iteration < max_iteration) do
-//     y := 2 × x × y + y0
-//     x := x2 - y2 + x0
-//     x2 := x × x
-//     y2 := y × y
-//     iteration := iteration + 1
-
-void mandelbrot(cairo_t *cairo, int x, int y, int w, int h) {
-    // (((P-x)/w) * 3.5) - 2.5
-    // printf("Drawing mandelbrot for %d, %d size %d, %d\n",
-    // x, y, w, h);
-    for (int i = x; i < x + w; i++) {
-        for (int j = y; j < y + h; j++) {
-            float x0 = (((i - x) / (float)w) * 3.5) - 2.5;
-            float y0 = (((j - y) / (float)h) * 2.0) - 1.0;
-            float x1 = 0, y1 = 0;
-            float px = 0, py = 0;
-            int maxIter = 20, iter = 0;
-            while (x1 + y1 <= 4 && iter < maxIter) {
-                py = 2.0 * px * py + y0;
-                px = x1 - y1 + x0;
-                x1 = px * px;
-                y1 = py * py;
-                iter++;
-            }
-            //printf("first %f, iter %d\n", x1+y1, iter);
-            Color color;
-            color.r = (iter * 255) / maxIter;
-            color.g = 0;
-            color.b = 0;
-            if (iter == maxIter) color.r = 0;
-            //printf("%d\n", color.r);
-            pixel(cairo, i, j, color);
-        }
-    }
-}
-
-void draw(cairo_t *cairo, int x, int y, int w, int h) {
-    // cairo_set_source_rgb(cairo, 1.0, 0.0, 0.0);
-    // cairo_rectangle(cairo, x, y, w, h);
-    // cairo_fill(cairo);
-    mandelbrot(cairo, x, y, w, h);
-}
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     // parse args
     short int searching = -1;
     short int screens = 0;
-    for (int i = 1; i < argc; i++) {
-        if (searching != -1) {
+    for (int i = 1; i < argc; i++)
+    {
+        if (searching != -1)
+        {
             screens++;
         }
-        if (strcmp(argv[i], "-m") == 0) {
-            searching = i+1;
+        if (strcmp(argv[i], "-m") == 0)
+        {
+            searching = i + 1;
         }
     }
     char screenNamesToSearch[screens][255];
-    for (int i = 0; i < screens; i++) {
-        strcpy(screenNamesToSearch[i], argv[i+searching]);
+    for (int i = 0; i < screens; i++)
+    {
+        strcpy(screenNamesToSearch[i], argv[i + searching]);
     }
     printf("Screens to draw to: %d\n", screens);
-    for (int i = 0; i < screens; i++) {
+    for (int i = 0; i < screens; i++)
+    {
         printf("Screen %d: %s\n", i, screenNamesToSearch[i]);
     }
 
@@ -110,19 +51,23 @@ int main(int argc, char *argv[]) {
     // get crtc names
     XRRScreenResources *res = XRRGetScreenResourcesCurrent(display, rootWindow);
     XRROutputInfo *output_info;
-    typedef struct ScreenGeometry {
+    typedef struct ScreenGeometry
+    {
         int x;
         int y;
         int w;
         int h;
     } ScreenGeometry;
     ScreenGeometry screenGeometryToDraw[screens];
-    for (int i = 0; i < res->noutput; i++) {
+    for (int i = 0; i < res->noutput; i++)
+    {
         output_info = XRRGetOutputInfo(display, res, res->outputs[i]);
         if (output_info->connection)
             continue; // No connection no crtcs
-        for (int j = 0; j < screens; j++) {
-            if (strcmp(output_info->name, screenNamesToSearch[j]) == 0) {
+        for (int j = 0; j < screens; j++)
+        {
+            if (strcmp(output_info->name, screenNamesToSearch[j]) == 0)
+            {
                 XRRCrtcInfo *crtc_info = XRRGetCrtcInfo(display, res, output_info->crtc);
                 ScreenGeometry temp;
                 temp.x = crtc_info->x;
@@ -134,36 +79,59 @@ int main(int argc, char *argv[]) {
         }
         printf("Found moniotr: %s\n", output_info->name);
     }
-    for (int i = 0; i < screens; i++) {
-        printf("Drawing at (%d,%d) with size of (%d,%d)\n", 
-        screenGeometryToDraw[i].x, screenGeometryToDraw[i].y, 
-        screenGeometryToDraw[i].w, screenGeometryToDraw[i].h);
+    for (int i = 0; i < screens; i++)
+    {
+        printf("Drawing at (%d,%d) with size of (%d,%d)\n",
+               screenGeometryToDraw[i].x, screenGeometryToDraw[i].y,
+               screenGeometryToDraw[i].w, screenGeometryToDraw[i].h);
     }
 
-    // create surface
-    cairo_surface_t *surface = cairo_xlib_surface_create(display, rootWindow, DefaultVisual(display, defaultScreen), width, height);
-    cairo_t *cairo = cairo_create(surface);
+    // init XImage surface and define a graphical context
+    XImage *surfaceImage;
+    char *data = calloc(width * height, 4);
+    surfaceImage = XCreateImage(display, DefaultVisual(display, defaultScreen), 
+        DefaultDepth(display, defaultScreen), ZPixmap, 0,
+        data, width, height, 32, 0);
+    GC gc = XCreateGC(display, rootWindow, 0, 0);
+    Pixmap pixmap = XCreatePixmap(display, rootWindow, width, height, 
+        DefaultDepth(display, defaultScreen));
 
     // draw to surface
-    for (int i = 0; i < screens; i++) {
-        draw(cairo, screenGeometryToDraw[i].x, screenGeometryToDraw[i].y,
-             screenGeometryToDraw[i].w, screenGeometryToDraw[i].h);
-    }
-    XSelectInput(display, rootWindow, ExposureMask);
+    // XSelectInput(display, rootWindow, ButtonPressMask);
+    // XEvent event;
+    // while (1)
+    // {
+    //     XNextEvent(display, &event);
+    //     if (event.type == Expose)
+    //     {
+    //     }
+    // }
+    XSelectInput(display, rootWindow, ButtonPressMask);
     XEvent event;
+    int color = 0;
     while (1) {
-        XNextEvent(display, &event);
-        if (event.type == Expose) {
-            for (int i = 0; i < screens; i++) {
-                draw(cairo, screenGeometryToDraw[i].x, screenGeometryToDraw[i].y, 
-                screenGeometryToDraw[i].w, screenGeometryToDraw[i].h);
+        if (needsRedraw == 0) XNextEvent(display, &event);
+        printf("Event! %d\n", event.type);
+        if (event.type == KeyPress)
+        {
+            printf("Event filtered!\n");
+            color = 1;
+            needsRedraw = 1;
+        }
+        if (needsRedraw == 1)
+        {
+            for (int i = 0; i < screens; i++)
+            {
+                draw(surfaceImage, screenGeometryToDraw[i].x, screenGeometryToDraw[i].y,
+                    screenGeometryToDraw[i].w, screenGeometryToDraw[i].h, color);
+                XPutImage(display, pixmap, gc, surfaceImage, 0, 0, 0, 0, width, height);
+                XSetWindowBackgroundPixmap(display, rootWindow, pixmap);
             }
+            needsRedraw = 0;
         }
     }
-
+    
     // free mem
-    cairo_destroy(cairo);
-    cairo_surface_destroy(surface);
     XCloseDisplay(display);
 
     return 0;
