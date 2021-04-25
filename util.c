@@ -1,6 +1,6 @@
 #include "util.h"
 
-unsigned long createRGB(int r, int g, int b)
+unsigned long createRGBA(int r, int g, int b, int a)
 {
-    return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+    return ((a & 0xff) << 24) + ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
 }

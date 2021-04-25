@@ -4,5 +4,5 @@
 
 void pixel(XImage *surfaceImage, int x, int y, Color color)
 {
-    XPutPixel(surfaceImage, x, y, createRGB(color.r, color.g, color.b));
+    XPutPixel(surfaceImage, x, y, createRGBA(color.r, color.g, color.b, color.a));
 }

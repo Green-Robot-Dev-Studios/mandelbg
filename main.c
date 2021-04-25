@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xrandr.h>
@@ -106,18 +107,27 @@ int main(int argc, char *argv[])
     //     {
     //     }
     // }
-    XSelectInput(display, rootWindow, ButtonPressMask);
+    XSelectInput(display, rootWindow, KeyPressMask);
     XEvent event;
     int color = 0;
+    XSetWindowBackgroundPixmap(display, rootWindow, pixmap);
+
     while (1) {
-        if (needsRedraw == 0) XNextEvent(display, &event);
-        printf("Event! %d\n", event.type);
-        if (event.type == KeyPress)
-        {
-            printf("Event filtered!\n");
-            color = 1;
+        // if (needsRedraw == 0)
+        //     XNextEvent(display, &event);
+        if (needsRedraw == 0) {
+            sleep(3);
+            color++;
+            if (color > 2) color = 0;
             needsRedraw = 1;
+            printf("Changing Color! %d\n", color);
         }
+        // if (event.type == KeyPress)
+        // {
+        //     printf("Event filtered!\n");
+        //     color = 1;
+        //     needsRedraw = 1;
+        // }
         if (needsRedraw == 1)
         {
             for (int i = 0; i < screens; i++)
@@ -125,7 +135,9 @@ int main(int argc, char *argv[])
                 draw(surfaceImage, screenGeometryToDraw[i].x, screenGeometryToDraw[i].y,
                     screenGeometryToDraw[i].w, screenGeometryToDraw[i].h, color);
                 XPutImage(display, pixmap, gc, surfaceImage, 0, 0, 0, 0, width, height);
-                XSetWindowBackgroundPixmap(display, rootWindow, pixmap);
+                XClearWindow(display, rootWindow);
+                XSync(display, False);
+                XFlush(display);
             }
             needsRedraw = 0;
         }

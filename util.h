@@ -6,8 +6,9 @@ typedef struct Color
     int r;
     int g;
     int b;
+    int a;
 } Color;
 
-unsigned long createRGB(int r, int g, int b);
+unsigned long createRGBA(int r, int g, int b, int a);
 
 #endif

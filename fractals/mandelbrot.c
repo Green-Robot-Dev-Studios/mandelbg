@@ -57,6 +57,7 @@ void mandelbrot(XImage *surfaceImage, int x, int y, int w, int h, int c)
                         color.b = 0;
                     break;
             }
+            color.a = 0;
             pixel(surfaceImage, i, j, color);
         }
     }
