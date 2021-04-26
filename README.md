@@ -1,14 +1,14 @@
 # MandelBG
 ## Set your X11 root window to fractals!
 
-- A program that allows you to set a fractal as your root window in X11 or wayland throught the Xwayland compatibility layer.
+- A program that allows you to set a fractal as your root window in X11 or wayland through the Xwayland compatibility layer.
 - Implemented so far: 
     * Mandelbrot and Julia
     * Basic color animation
     * Multi-monitor support
 - TODO:
     * Add more animation options
-    * Add command line animation functionality.
+    * Add command line animation functionality
     * Overwrite file manager based root windows
     * Don't overwrite unused monitor wallpapers
     * Publish to package manager
