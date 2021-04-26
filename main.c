@@ -13,6 +13,7 @@ int width, height, needsRedraw = 1;
 void draw(XImage *surfaceImage, int x, int y, int w, int h, int c)
 {
     mandelbrot(surfaceImage, x, y, w, h, c);
+    //julia(surfaceImage, x, y, w, h, c);
 }
 
 int main(int argc, char *argv[])
@@ -113,15 +114,18 @@ int main(int argc, char *argv[])
     XSetWindowBackgroundPixmap(display, rootWindow, pixmap);
 
     while (1) {
+        // working on event code
         // if (needsRedraw == 0)
         //     XNextEvent(display, &event);
-        if (needsRedraw == 0) {
-            sleep(3);
-            color++;
-            if (color > 2) color = 0;
-            needsRedraw = 1;
-            printf("Changing Color! %d\n", color);
-        }
+
+        // if (needsRedraw == 0) {
+        //     sleep(3);
+        //     color++;
+        //     if (color > 2) color = 0;
+        //     needsRedraw = 1;
+        //     printf("Changing Color! %d\n", color);
+        // }
+
         // if (event.type == KeyPress)
         // {
         //     printf("Event filtered!\n");

@@ -5,5 +5,6 @@
 
 // defines all fractal functions
 void mandelbrot(XImage *surfaceImage, int x, int y, int w, int h, int c);
+void julia(XImage *surfaceImage, int x, int y, int w, int h, int c);
 
 #endif

@@ -1,6 +1,6 @@
 CC=gcc # define the compiler to use
 TARGET=mandelbg # define the name of the executable
-SOURCES=main.c fractals/mandelbrot.c render.c util.c
+SOURCES=main.c fractals/mandelbrot.c fractals/julia.c render.c util.c
 CFLAGS=-O3
 LFLAGS=-lm
 LIBS = -lX11 -lXrandr
